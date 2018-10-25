@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--对话框-->
+<div id="saleAttr_dlg" class="easyui-dialog" title="编辑销售属性" style="width:400px;height:320px;"
+     closed="true"  data-options="iconCls:'icon-save',resizable:true,modal:false" buttons="#saleAttrBtns" >
+
+<!--下拉菜单-->
+<br><br>
+ 销售属性 ：   <input id="baseSaleSelect" class="easyui-combobox" name="baseSaleSelect"
+           data-options="valueField:'id',textField:'name',url:'baseSaleAttrList',method:'get' "  />
+    <br><br>
+<!--数据网格-->
+
+    <table id="spuSaleAttrValueDg" class="easyui-datagrid" title="销售属性值列表"
+           data-options="singleSelect:true,method:'get',toolbar:'#spuSaleAttrValueTootbar'" ></table>
+
+
+<!--按钮组-->
+
+    <div id="saleAttrBtns">
+        <a href="#" class="easyui-linkbutton" onclick="saveSaleAttr()">保 存</a>
+        <a href="#" class="easyui-linkbutton" onclick="closeSaleAttr()">关 闭</a>
+    </div>
+
+</div>
+</body>
+
+<script language="JavaScript">
+    function saveSaleAttr() {
+        var saleAttrId=$('#baseSaleSelect').combobox('getValue');
+        var saleAttrName=$('#baseSaleSelect').combobox('getText');
+        var saleAttrData=$('#spuSaleAttrValueDg').datagrid('getData');
+        console.log("data:"+ JSON.stringify(saleAttrData) );
+        $('#spuSaleAttrDg').datagrid('appendRow',{saleAttrId:saleAttrId,saleAttrName:saleAttrName,saleAttrData:saleAttrData})
+        $('#saleAttr_dlg').dialog('close');
+    }
+
+
+
+    function initSaleAttrInfoDlg() {
+        // 清空数据
+        //
+        //打开窗口
+        $('#saleAttr_dlg').dialog('open');
+        console.log("00000000000000");
+        initSpuSaleAttrValueDatagrid();
+
+    }
+
+
+    function initSpuSaleAttrValueDatagrid() {
+        $('#spuSaleAttrValueDg').datagrid('loadData', { total: 0, rows: [] });
+        console.log("1111");
+        var dg= $('#spuSaleAttrValueDg').datagrid({
+            url:'',
+            columns:[[
+                {field:'saleAttrId',title:'销售属性值id',width:'30%'},
+                {field:'saleAttrValueName',title:'销售属性值名称',width:'60%',
+                    editor:{
+                        type:'validatebox',option:{required:true}
+                    }
+                }
+            ]],
+            toolbar: [{
+                iconCls: 'icon-add',
+                text:'添加',
+                handler: function(){
+                    dg.datagrid('appendRow',{
+                        saleAttrId: '',
+                        saleAttrValueName: ''
+                    });
+                }
+            },'-',{
+                iconCls: 'icon-remove',
+                text:'删除',
+                handler: function(){
+                    var row = dg.datagrid('getSelected');
+                    var rowIndex = dg.datagrid('getRowIndex',row);
+                    dg.datagrid('deleteRow',rowIndex);
+
+                }
+            }],
+            onDblClickRow: function(index,row){
+                $(this).datagrid('beginEdit', index);
+
+                var valueName = row.saleAttrValueName;
+                $("input.datagrid-editable-input").val(valueName).bind("blur",function(evt){
+                    dg.datagrid('endEdit',index);
+                });
+
+            }
+
+        });
+
+        console.log("2222222222");
+
+    }
+</script>
+
+
+</html>

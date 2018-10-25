@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.gmall1129.manage.mapper.BaseAttrInfoMapper">
+    <select id="selectAttrInfoList" resultMap="attrInfoMap">
+
+        SELECT ba.id ,
+        ba.attr_name,
+        ba.catalog3_id,
+        bv.id value_id ,
+        bv.attr_id,
+        bv.value_name FROM base_attr_info ba INNER JOIN base_attr_value bv ON ba.id =bv.attr_id
+        WHERE ba.catalog3_id=#{catalog3Id}
+
+    </select>
+    <!--$ 拼接字符串  #利用预编译-->
+
+    <resultMap id="attrInfoMap" type="com.atguigu.gmall1129.bean.BaseAttrInfo" autoMapping="true"><!--自动装配 自动把"_"和驼峰匹配-->
+        <result property="id" column="id"></result>
+        <collection property="attrValueList" ofType="com.atguigu.gmall1129.bean.BaseAttrValue" autoMapping="true">
+            <result property="id" column="value_id"></result>
+        </collection>
+    </resultMap>
+
+
+    <!--商品详情页 item 的查询sql-->
+    <select id="selectAttrInfoListByValueIds" resultMap="attrInfoMap">
+
+        SELECT ba.id ,
+        ba.attr_name,
+        ba.catalog3_id,
+        bv.id value_id ,
+        bv.attr_id,
+        bv.value_name FROM base_attr_info ba INNER JOIN base_attr_value bv ON ba.id =bv.attr_id
+        WHERE  bv.id IN (${valueIds})
+
+    </select>
+</mapper>
