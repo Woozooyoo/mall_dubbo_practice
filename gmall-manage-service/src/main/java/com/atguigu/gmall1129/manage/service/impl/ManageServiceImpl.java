@@ -56,6 +56,7 @@ public class ManageServiceImpl implements ManageService {
 	@Autowired
 	SkuSaleAttrValueMapper skuSaleAttrValueMapper;
 
+	// 配置类@Configuration的 RedisConfig 的@Bean RedisUtil getRedisUtil可以直接自动注入
 	@Autowired
 	RedisUtil redisUtil;
 
@@ -224,6 +225,7 @@ public class ManageServiceImpl implements ManageService {
 
 
 	/** 以下是item-web 调用的serviceImpl 方法------------------------------------------------------------------*/
+	// getSkuInfo 测试方法
 	public SkuInfo getSkuInfo(String skuId) {
 
 		SkuInfo skuInfo = skuInfoMapper.selectByPrimaryKey (skuId);
@@ -243,6 +245,7 @@ public class ManageServiceImpl implements ManageService {
 		return skuInfo;
 	}
 
+	// 原本方法
 	public SkuInfo getSkuInfo1(String skuId) {
 		try {
 			Jedis jedis = redisUtil.getJedis ();
@@ -318,6 +321,7 @@ public class ManageServiceImpl implements ManageService {
 		return skuInfo;
 	}
 
+	/** 切换属性页面跳转 到指定sku 的逻辑*/
 	public List<SkuSaleAttrValue> getSkuSaleAttrValueListBySpu(String spuId) {
 		List<SkuSaleAttrValue> skuSaleAttrValues = skuSaleAttrValueMapper.selectSkuSaleAttrValueListBySpu (Long.parseLong (spuId));
 

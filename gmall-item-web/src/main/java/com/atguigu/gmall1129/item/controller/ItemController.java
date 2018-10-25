@@ -31,25 +31,14 @@ public class ItemController {
     ListService listService;
 
     @GetMapping("{skuId}.html")
-    public  String  getItem(@PathVariable("skuId") String skuId, HttpServletRequest request){
-        SkuInfo skuInfo = manageService.getSkuInfo(skuId);
-	    request.setAttribute("skuInfo",skuInfo);
-
-	    List<SpuSaleAttr> saleAttrList = manageService.getSaleAttrListBySku(skuInfo.getSpuId(),skuId);
-	    request.setAttribute("saleAttrList",saleAttrList);
-
-
-	    return "item";
-    }
-
-    @GetMapping("{skuId}1.html")
     public  String  getItem1(@PathVariable("skuId") String skuId, HttpServletRequest request){
         SkuInfo skuInfo = manageService.getSkuInfo(skuId);
         request.setAttribute("skuInfo",skuInfo);
 
         List<SpuSaleAttr> saleAttrList = manageService.getSaleAttrListBySku(skuInfo.getSpuId(),skuId);
 
-        List<SkuSaleAttrValue> skuSaleAttrValueListBySpu = manageService.getSkuSaleAttrValueListBySpu(skuInfo.getSpuId());
+	    //根据页面的spuId切换属性页面跳转 到指定sku 的controller
+	    List<SkuSaleAttrValue> skuSaleAttrValueListBySpu = manageService.getSkuSaleAttrValueListBySpu(skuInfo.getSpuId());
 
         String valueIdString="";
         Map valueIds_skuId_Map= new HashMap<>();
@@ -60,18 +49,20 @@ public class ItemController {
             SkuSaleAttrValue skuSaleAttrValue = skuSaleAttrValueListBySpu.get(i);
             valueIdString+=skuSaleAttrValue.getSaleAttrValueId();
 
-            if((i+1)<skuSaleAttrValueListBySpu.size() ) {
+            if((i+1)<skuSaleAttrValueListBySpu.size() ) { //小于说明还有下一个值
                 SkuSaleAttrValue skuSaleAttrValueNext = skuSaleAttrValueListBySpu.get(i + 1);
+                // 如果下一个 销售属性值 不等于 自己销售属性值 就把它本次的valueString和skuId put
                 if (!skuSaleAttrValueNext.getSkuId().equals(skuSaleAttrValue.getSkuId())) {
                     valueIds_skuId_Map.put(valueIdString, skuSaleAttrValue.getSkuId());
                     valueIdString = "";
                 }
-            }else{
+            }else{ //大于或等于 说明是 这就是最后一个销售属性了
                 valueIds_skuId_Map.put(valueIdString, skuSaleAttrValue.getSkuId());
                 valueIdString = "";
             }
 
         }
+	    // 要把  销售属性的组合 与 skuId的对照表Map   转换成 Json
         String valueIdsSkuIdJson = JSON.toJSONString(valueIds_skuId_Map);
 
         request.setAttribute("valueIdsSkuIdJson",valueIdsSkuIdJson);

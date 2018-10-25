@@ -2,6 +2,7 @@
 <!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.atguigu.gmall1129.manage.mapper.SkuSaleAttrValueMapper">
 
+    <!--销售属性的组合 与 skuId的对照表-->
 <select id="selectSkuSaleAttrValueListBySpu" resultMap="skuSaleAttrValue">
     SELECT skuv.sale_attr_value_id ,skuv.sku_id FROM sku_sale_attr_value skuv  INNER JOIN sku_info sk   ON skuv.sku_id =sk.id
     WHERE sk.spu_id=#{spuId}
