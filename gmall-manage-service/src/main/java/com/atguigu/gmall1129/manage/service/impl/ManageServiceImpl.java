@@ -178,7 +178,7 @@ public class ManageServiceImpl implements ManageService {
 		return spuSaleAttrList;
 	}
 
-	// 通过sku 查询销售属性
+	/** 通过sku 查询销售属性    可以优化 用redis来跳转*/
 	public List<SpuSaleAttr> getSaleAttrListBySku(String spuId, String skuId) {
 		List<SpuSaleAttr> spuSaleAttrList = spuSaleAttrMapper.selectSaleAttrInfoListBySku (Long.parseLong (spuId), Long.parseLong (skuId));
 		return spuSaleAttrList;
@@ -225,8 +225,8 @@ public class ManageServiceImpl implements ManageService {
 
 
 	/** 以下是item-web 调用的serviceImpl 方法------------------------------------------------------------------*/
-	// getSkuInfo 测试方法
-	public SkuInfo getSkuInfo(String skuId) {
+	// getSkuInfo 测试商品详情 方法
+/*	public SkuInfo getSkuInfo(String skuId) {
 
 		SkuInfo skuInfo = skuInfoMapper.selectByPrimaryKey (skuId);
 
@@ -243,10 +243,13 @@ public class ManageServiceImpl implements ManageService {
 //		skuInfo.setSkuAttrValueList (skuAttrValueList);
 
 		return skuInfo;
-	}
+	}*/
 
-	// 原本方法
-	public SkuInfo getSkuInfo1(String skuId) {
+	/*		1.sleep调用时不会释放锁。wait调用时会释放锁
+		2.sleep是Thread中的方法，wait是Object中的方法
+		3.sleep会自动唤醒，wait需要被notify/notifyAll唤醒。*/
+	/** 分布式锁 666 因为mysql数据库查询缓慢 如果 在redis 查mysql的时候 高并发查redis redis全部查MySQL 就会雪崩*/
+	public SkuInfo getSkuInfo(String skuId) {
 		try {
 			Jedis jedis = redisUtil.getJedis ();
 			//先查询缓存
@@ -265,15 +268,16 @@ public class ManageServiceImpl implements ManageService {
 				jedis.close ();
 				return skuInfo;
 
-			} else {
+			} else {//缓存如果没命中，先分布锁redis
 				System.err.println (Thread.currentThread ().getName () + "未命中");
 				//先检查是否能获得锁，同时尝试获得锁
 				String skuLockKey = RedisConst.SKU_PREFIX + skuId + RedisConst.SKULOCK_SUFFIX;
+				// set lock3 locked NX EX 10 锁住10秒 返回ok |下次再set 为 null |10秒后放锁
 				String ifLocked = jedis.set (skuLockKey, "locked", "NX", "EX", 10);
 				if (ifLocked == null) {
-					System.err.println (Thread.currentThread ().getName () + "未未获得锁，开始自旋");
+					System.err.println (Thread.currentThread ().getName () + "未获得锁，开始自旋");
 					try {
-						Thread.sleep (1000);
+						Thread.sleep (1000);//等待1秒线程自旋
 					} catch (InterruptedException e) {
 						e.printStackTrace ();
 					}
@@ -298,6 +302,7 @@ public class ManageServiceImpl implements ManageService {
 		} catch (JedisConnectionException e) {
 			e.printStackTrace ();
 		}
+		//如果redis 宕机了 直接查mysql
 		return getSkuInfoDB (skuId);
 
 	}
@@ -321,13 +326,14 @@ public class ManageServiceImpl implements ManageService {
 		return skuInfo;
 	}
 
-	/** 切换属性页面跳转 到指定sku 的逻辑*/
+	/** 切换属性页面跳转 到指定sku 的逻辑   可以优化 用redis来跳转*/
 	public List<SkuSaleAttrValue> getSkuSaleAttrValueListBySpu(String spuId) {
 		List<SkuSaleAttrValue> skuSaleAttrValues = skuSaleAttrValueMapper.selectSkuSaleAttrValueListBySpu (Long.parseLong (spuId));
 
 		return skuSaleAttrValues;
 	}
 
+	/** ES 的  上架*/
 	public void onSale(String skuId) {
 
 		SkuInfo skuInfo = getSkuInfo (skuId);
@@ -336,12 +342,11 @@ public class ManageServiceImpl implements ManageService {
 
 		try {
 			BeanUtils.copyProperties (skuInfoEs, skuInfo);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace ();
-		} catch (InvocationTargetException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace ();
 		}
 
+		//skuInfoEs 和skuInfo 的属性skuAttrValueEsList不同名 无法拷贝 要手动放入
 		List<SkuAttrValueEs> skuAttrValueEsList = new ArrayList<> ();
 
 		List<SkuAttrValue> skuAttrValueList = skuInfo.getSkuAttrValueList ();
@@ -353,6 +358,15 @@ public class ManageServiceImpl implements ManageService {
 
 		skuInfoEs.setSkuAttrValueListEs (skuAttrValueEsList);
 
+		/** 实际开发不能这样写
+		 *  onSale 极端依赖ES  最好做成 异步的--跨模块的写操作
+		 *  因为如果 onSale调用saveSkuInfoEs 其实商品上架也要数据库也要做变更记录
+		 *  如果saveSkuInfoEs 没有完成ES操作 或者调不通
+		 *  调不通程序就会卡死
+		 *  做成异步通信 发一个消息过去  不管listService活着死着都不管 不管listService办没办 继续下面逻辑
+		 *  这样就能解耦和
+		 *  到消息队列会再提
+		 * */
 		listService.saveSkuInfoEs (skuInfoEs);//异步 //跨模块写操作 //解耦合
 
 	}

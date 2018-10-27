@@ -59,12 +59,12 @@ public class FileUploadController {
         StorageClient storageClient = new StorageClient(trackerServer, null);
 
 		//storage客户端可以上传 上传结果就是 访问路径名的String
-        String[] upload_file = storageClient.upload_file("C:\\Users\\Adrian\\Pictures\\Saved Pictures\\u=341602445,1075658225&fm=27&gp=0.jpg", "jpg", null);
-
+        String[] upload_file = storageClient.upload_file("C:\\Users\\Adrian\\Pictures\\小米黑\\黑正背.jpg", "jpg", null);
+        String url="http://file.gmall.com";
         for (int i = 0; i < upload_file.length; i++) {
-            String s = upload_file[i];
-            System.out.println("s = " + s);
+            url+="/"+upload_file[i];
         }
+        System.out.println(url);
 
     }
 

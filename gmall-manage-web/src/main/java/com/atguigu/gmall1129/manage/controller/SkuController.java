@@ -24,6 +24,7 @@ public class SkuController {
         return "success";
     }
 
+    //上架  上架应该做一个后台管理  逻辑
     @PostMapping("onSale")
     @ResponseBody
     public String onSale(@RequestParam("skuId") String skuId){
@@ -31,4 +32,5 @@ public class SkuController {
         return "success";
     }
 
+	/*还有sku的 列表 编辑 删除 编辑保存没做----------*/
 }

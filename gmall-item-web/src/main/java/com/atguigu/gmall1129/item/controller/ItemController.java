@@ -31,7 +31,7 @@ public class ItemController {
     ListService listService;
 
     @GetMapping("{skuId}.html")
-    public  String  getItem1(@PathVariable("skuId") String skuId, HttpServletRequest request){
+    public  String  getItem(@PathVariable("skuId") String skuId, HttpServletRequest request){
         SkuInfo skuInfo = manageService.getSkuInfo(skuId);
         request.setAttribute("skuInfo",skuInfo);
 
@@ -68,9 +68,9 @@ public class ItemController {
         request.setAttribute("valueIdsSkuIdJson",valueIdsSkuIdJson);
         request.setAttribute("saleAttrList",saleAttrList);
 
-        //更新热度评分
+        /**更新 对应的 redis 热度评分计数器  计数到一定值 更新ES 热度评分*/
 
-       // listService.countHotScore(skuId);
+        listService.countHotScore(skuId);
 
         return "item";
     }
