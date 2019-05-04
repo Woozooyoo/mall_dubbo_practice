@@ -288,10 +288,12 @@ public class ManageServiceImpl implements ManageService {
 					//未命中查询数据库
 					SkuInfo skuInfoDB = getSkuInfoDB (skuId);
 					if (skuInfoDB == null) {
+						//setex 缓存 SKU_TIMEOUT 秒
 						jedis.setex (skuKey, RedisConst.SKU_TIMEOUT, "empty");
 					} else {
 						//保存一份到缓存
 						String skuInfoJsonNew = JSON.toJSONString (skuInfoDB);
+						//setex 缓存 SKU_TIMEOUT 秒
 						jedis.setex (skuKey, RedisConst.SKU_TIMEOUT, skuInfoJsonNew);
 					}
 					jedis.close ();
