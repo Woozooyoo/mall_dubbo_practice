@@ -250,7 +250,7 @@ public class ManageServiceImpl implements ManageService {
 		3.sleep会自动唤醒，wait需要被notify/notifyAll唤醒。*/
 	/** 分布式锁 666 因为mysql数据库查询缓慢 如果 在redis 查mysql的时候 高并发查redis redis全部查MySQL 就会雪崩
 	 *
-	 * ctrl + shift + F9 Rebuild 如果方法名类没改的话直接用这个快捷键*/
+	 * ctrl + shift + F9 Rebuild 如果方法名类没改的话直接用这个快捷键   keys * 查看redis-cli所有*/
 	public SkuInfo getSkuInfo(String skuId) {
 		try {
 			Jedis jedis = redisUtil.getJedis ();

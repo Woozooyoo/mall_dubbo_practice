@@ -1,16 +1,15 @@
-package com.atguigu.gmall1129.usermanage;
+package com.atguigu.gmall1129.passport;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import tk.mybatis.spring.annotation.MapperScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.atguigu.gmall1129")
-@MapperScan(basePackages = "com.atguigu.gmall1129.usermanage.mapper")
-public class GmallUsermanageApplication {
+public class GmallPassportApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GmallUsermanageApplication.class, args);
+		SpringApplication.run (GmallPassportApplication.class, args);
 	}
+
 }

@@ -6,6 +6,7 @@ import com.atguigu.gmall1129.bean.SkuInfo;
 import com.atguigu.gmall1129.bean.SkuSaleAttrValue;
 import com.atguigu.gmall1129.bean.SpuSaleAttr;
 //import com.atguigu.gmall1129.config.LoginRequire;
+import com.atguigu.gmall1129.config.LoginRequire;
 import com.atguigu.gmall1129.service.ListService;
 import com.atguigu.gmall1129.service.ManageService;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ public class ItemController {
     ListService listService;
 
     @GetMapping("{skuId}.html")
+    @LoginRequire
     public  String  getItem(@PathVariable("skuId") String skuId, HttpServletRequest request){
         SkuInfo skuInfo = manageService.getSkuInfo(skuId);
         request.setAttribute("skuInfo",skuInfo);
@@ -70,7 +72,7 @@ public class ItemController {
 
         /**更新 对应的 redis 热度评分计数器  计数到一定值 更新ES 热度评分*/
 
-        listService.countHotScore(skuId);
+//        listService.countHotScore(skuId);
 
         return "item";
     }

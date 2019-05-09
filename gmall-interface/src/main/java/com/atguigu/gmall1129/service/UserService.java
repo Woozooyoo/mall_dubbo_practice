@@ -23,7 +23,7 @@ public interface UserService {
 
     public List<UserAddress> getUserAddressList(String userId);
 
-//    public UserInfo login(UserInfo userInfo);
-//
-//    public boolean verify(String userId);
+    public UserInfo login(UserInfo userInfo);
+
+    public boolean verify(String userId);
 }

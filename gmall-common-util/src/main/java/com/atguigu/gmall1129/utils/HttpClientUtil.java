@@ -15,17 +15,25 @@ import java.io.IOException;
  */
 public class HttpClientUtil {
 
-
+    /** 模拟一个浏览器  在第三方接口经常会用
+     * @param url
+     * @return
+     */
     public static  String doGet(String url){
 
+        //模拟一个浏览器
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
+        //get请求，参数拼在url里面
         HttpGet httpGet=new HttpGet(url);
         String result=null;
         CloseableHttpResponse httpResponse = null;
         try {
+            //执行一个请求
             httpResponse = httpClient.execute(httpGet);
+            //结果是一个io流
             HttpEntity entity = httpResponse.getEntity();
+            //io流 用EntityUtils得到string，得到get请求后的结果
             result = EntityUtils.toString(entity);
 
             EntityUtils.consume(entity);
@@ -35,11 +43,6 @@ public class HttpClientUtil {
         }
 
         return result;
-
-
-
-
-
     }
 
 
