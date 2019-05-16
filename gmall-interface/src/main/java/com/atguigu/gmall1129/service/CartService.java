@@ -1,15 +1,13 @@
-/*
 package com.atguigu.gmall1129.service;
 
 import com.atguigu.gmall1129.bean.CartInfo;
 
 import java.util.List;
 
-*/
 /**
  * @param
  * @return
- *//*
+ */
 
 public interface CartService {
 
@@ -27,4 +25,3 @@ public interface CartService {
 
     public void delCartChecked(String userId);
 }
-*/

@@ -13,6 +13,7 @@
         sale_attr_value_name
         FROM spu_sale_attr sa INNER JOIN spu_sale_attr_value sv ON sa.sale_attr_id=sv.sale_attr_id
         WHERE sv.spu_id=#{spuId} and sa.spu_id=#{spuId}
+        order by sv.id
     </select>
 
     <resultMap id="saleAttrInfoMap" type="com.atguigu.gmall1129.bean.SpuSaleAttr" autoMapping="true">
@@ -37,6 +38,8 @@
         FROM spu_sale_attr sa INNER JOIN spu_sale_attr_value sv ON sa.sale_attr_id=sv.sale_attr_id AND sa.spu_id=sv.spu_id
         LEFT JOIN sku_sale_attr_value  ssv ON ssv.sale_attr_value_id=sv.id AND sku_id=#{skuId}
         WHERE sv.spu_id=#{spuId}
+        order by sv.id
+        /*加上order可以在item点选时不更改销售属性顺序*/
     </select>
 
 

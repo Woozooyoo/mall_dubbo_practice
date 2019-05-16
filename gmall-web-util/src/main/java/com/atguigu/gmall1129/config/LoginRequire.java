@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LoginRequire {
+    //true 强行跳转，false不强行重定向登录页面
     boolean autoRedirect() default true;
 
     String debugUser() default "0";

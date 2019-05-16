@@ -77,6 +77,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                 if ("success".equals(result)) {
                     request.setAttribute("userId",userId);
                 }else{
+                    //trie是要求重定向并强行登陆
                     if(methodAnnotation.autoRedirect()) {
                         String originUrl = request.getRequestURL().toString();
                         originUrl = URLEncoder.encode(originUrl, "utf-8");
@@ -84,6 +85,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                     }
                 }
             }else{
+                //trie是要求重定向并强行登陆
                 if(methodAnnotation.autoRedirect()) {
                     String originUrl = request.getRequestURL().toString();
                     originUrl = URLEncoder.encode(originUrl, "utf-8");

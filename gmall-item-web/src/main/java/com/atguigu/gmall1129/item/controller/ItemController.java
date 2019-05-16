@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class ItemController {
     ListService listService;
 
     @GetMapping("{skuId}.html")
-    @LoginRequire
+//    @LoginRequire
     public  String  getItem(@PathVariable("skuId") String skuId, HttpServletRequest request){
         SkuInfo skuInfo = manageService.getSkuInfo(skuId);
         request.setAttribute("skuInfo",skuInfo);
@@ -67,7 +68,11 @@ public class ItemController {
 	    // 要把  销售属性的组合 与 skuId的对照表Map   转换成 Json
         String valueIdsSkuIdJson = JSON.toJSONString(valueIds_skuId_Map);
 
-        request.setAttribute("valueIdsSkuIdJson",valueIdsSkuIdJson);
+	    request.setAttribute("valueIdsSkuIdJson",valueIdsSkuIdJson);
+
+	    // 快排 排序销售属性
+//	    saleAttrList.sort(Comparator.comparingInt (o -> Integer.parseInt (o.getId ())));
+
         request.setAttribute("saleAttrList",saleAttrList);
 
         /**更新 对应的 redis 热度评分计数器  计数到一定值 更新ES 热度评分*/
