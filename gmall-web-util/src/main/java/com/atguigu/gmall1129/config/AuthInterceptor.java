@@ -61,6 +61,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         HandlerMethod handlerMethod =(HandlerMethod)handler;
         LoginRequire methodAnnotation = handlerMethod.getMethodAnnotation(LoginRequire.class);
         if(methodAnnotation!=null){
+        	//可以在调试时省去启动 登录模块
             String debugUser = methodAnnotation.debugUser();
             if(!"0".equals(debugUser)){
                 request.setAttribute("userId",debugUser);

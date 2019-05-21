@@ -17,7 +17,7 @@ public class RedisUtil {
 	public void initJedisPool(String host, int port) {
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig ();
 		//最大的池子连接数
-		jedisPoolConfig.setMaxTotal (20);
+		jedisPoolConfig.setMaxTotal (100);
 		//最小空闲数  多闲也要备着 5个
 		jedisPoolConfig.setMinIdle (5);
 		//最大空闲数  当空闲用不了那么多链接的时候 会把超过10的没用链接释放掉

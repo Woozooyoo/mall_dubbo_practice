@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
+ 订单明细
  * @param
  * @return
  */

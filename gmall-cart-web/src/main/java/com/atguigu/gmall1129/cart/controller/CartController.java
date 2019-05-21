@@ -39,7 +39,7 @@ public class CartController {
 
 
     @RequestMapping(value = "addToCart",method = RequestMethod.POST)
-    @LoginRequire(autoRedirect = false/*,debugUser = "1"*/)
+    @LoginRequire(autoRedirect = false,debugUser = "1")
     public String addToCart(CartInfo cartInfo, Model model, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
         SkuInfo skuInfo = manageService.getSkuInfo(cartInfo.getSkuId());
@@ -68,7 +68,7 @@ public class CartController {
 
 
     @GetMapping("cartList")
-    @LoginRequire(autoRedirect = false/*,debugUser = "1"*/)
+    @LoginRequire(autoRedirect = false,debugUser = "1")
     public String getCartList(HttpServletRequest request,HttpServletResponse response){
         String userId =(String) request.getAttribute("userId");
         List<CartInfo> cartInfoList=null;
@@ -93,7 +93,7 @@ public class CartController {
 
     @PostMapping("checkCart")
     //如果没有LoginRequire就没有登录的结果
-    @LoginRequire(autoRedirect = false/*,debugUser = "1"*/)
+    @LoginRequire(autoRedirect = false,debugUser = "1")
     @ResponseBody
     public String checkCart(HttpServletRequest request){
 
@@ -111,7 +111,7 @@ public class CartController {
 
 
     @GetMapping("toTrade")
-    @LoginRequire(autoRedirect = true/*,debugUser = "1"*/)
+    @LoginRequire(autoRedirect = true,debugUser = "1")
     public String toTrade(HttpServletRequest request,HttpServletResponse response){
         String userId =(String) request.getAttribute("userId");
         List<CartInfo> cartCookieList = cartCookieHandler.getCartList(request);

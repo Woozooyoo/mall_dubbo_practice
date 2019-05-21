@@ -101,11 +101,15 @@ public class CartServiceImpl implements CartService{
             }
         });
 
+        jedis.close ();
         return cartInfoList;
 
     }
 
-
+	/** 更新价格
+	 * @param userId
+	 * @return
+	 */
     public  List<CartInfo> loadCartCache(String userId){
         List<CartInfo> cartInfoList = cartInfoMapper.selectCartInfoWithSkuPrice(Long.parseLong(userId));
         Map cartMap=new HashMap(cartInfoList.size());
@@ -119,6 +123,8 @@ public class CartServiceImpl implements CartService{
         Jedis jedis = redisUtil.getJedis();
         String cartKey="user:"+userId+":cart";
         jedis.hmset(cartKey,cartMap);
+
+        //伪登录会导致 刚存进去的缓存 就因为没登录redis user，而失效
        // String userInfoKey="user:"+userId+":info";
        // Long ttl = jedis.ttl(userInfoKey);
         //jedis.expire(cartKey,ttl.intValue());
@@ -178,6 +184,7 @@ public class CartServiceImpl implements CartService{
     }
 
 
+    /**订单结算。要把查询出来的cartInfoList装配到orderDetailList中*/
     public List<CartInfo> getCartChecked(String userId){
         String checkedKey="user:"+userId+":checked";
         Jedis jedis = redisUtil.getJedis();
@@ -195,22 +202,18 @@ public class CartServiceImpl implements CartService{
 
 
     public void delCartChecked(String userId){
-
-
         String checkedKey="user:"+userId+":checked";
         String cartKey="user:"+userId+":cart";
         Jedis jedis = redisUtil.getJedis();
         Set<String> skuIdSet = jedis.hkeys(checkedKey);
 
-
-
         for (String skuId : skuIdSet) {
-
             CartInfo cartInfoQuery=new CartInfo();
             cartInfoQuery.setUserId(userId);
             cartInfoQuery.setSkuId(skuId);
+            //删数据库
             cartInfoMapper.delete(cartInfoQuery);
-
+	        //删redis
             jedis.hdel(cartKey,skuId);
         }
         jedis.del(checkedKey);

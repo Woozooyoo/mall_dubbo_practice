@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+//没扫包就 没有拦截器
 @ComponentScan(basePackages = "com.atguigu.gmall1129")
 public class GmallOrderWebApplication {
 

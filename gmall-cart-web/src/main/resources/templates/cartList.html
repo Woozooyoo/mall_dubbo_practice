@@ -9,7 +9,9 @@
     <script src="/js/jquery-3.1.1.min.js" charset="utf-8"></script>
     <link rel="stylesheet" href="/css/One_mainFoot.css">
     <link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css" />
-    <!--需要重新确定 全选逻辑 JS代码-->
+    <!--需要重新确定 全选逻辑 JS代码
+
+    需要重新写 - + 删除逻辑 -->
 </head>
 <body>
 <header>
@@ -45,7 +47,7 @@
     <div class="one_sousuo">
         <div class="one_search_top">
             <div class="one_top_left">
-                <a href="../" class="one_left_logo"><img src="/img/logo1.jpg"></a>
+                <a href="../" class="one_left_logo"><img src="/img/logo2.jpg" width="190" height="90"></a>
                 <a href="#" class="one_left_link">购物车</a>
             </div>
             <div class="one_top_right">
@@ -278,6 +280,7 @@
        window.location.href="http://passport.atguigu.com/index?originUrl="+s;
     }
 
+     //勾选购物车的商品
     function checkSku( chkbox){
         console.log($(chkbox));
        var skuId= $(chkbox).attr("value");

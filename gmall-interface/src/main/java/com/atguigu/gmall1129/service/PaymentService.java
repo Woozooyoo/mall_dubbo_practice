@@ -1,13 +1,11 @@
-/*
 package com.atguigu.gmall1129.service;
 
 import com.atguigu.gmall1129.bean.PaymentInfo;
 
-*/
 /**
  * @param
  * @return
- *//*
+ * */
 
 public interface PaymentService {
     public  void savePaymentInfo(PaymentInfo paymentInfo);
@@ -25,4 +23,3 @@ public interface PaymentService {
     public boolean checkAlipayQuery(String outTradeNo);
 
 }
-*/

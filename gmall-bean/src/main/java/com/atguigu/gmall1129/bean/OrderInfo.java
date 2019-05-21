@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-/**
+/**一个订单info 对于多个订单明细 detail
+/**一个订单info 对于多个子订单info
  * @param
  * @return
  */

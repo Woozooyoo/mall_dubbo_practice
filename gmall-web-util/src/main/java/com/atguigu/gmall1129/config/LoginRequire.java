@@ -15,6 +15,7 @@ public @interface LoginRequire {
     //true 强行跳转，false不强行重定向登录页面
     boolean autoRedirect() default true;
 
-    String debugUser() default "0";
+	//可以在调试时省去启动 登录模块
+	String debugUser() default "0";
 
 }
