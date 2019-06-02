@@ -14,12 +14,10 @@ public interface PaymentService {
 
     public void updatePaymentInfo(PaymentInfo paymentInfo);
 
-
-    public void sendPaymentResult(String orderId);
-
-    public void sendDelayCheck(String outTradeNo, Long checkCount);
-
-
-    public boolean checkAlipayQuery(String outTradeNo);
+//    public void sendPaymentResult(String orderId);
+//
+//    public void sendDelayCheck(String outTradeNo, Long checkCount);
+//
+//    public boolean checkAlipayQuery(String outTradeNo);
 
 }

@@ -116,6 +116,10 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+	/** 支付模块 查询订单
+	 * @param orderId
+	 * @return
+	 */
     public OrderInfo getOrderInfo(String orderId){
         OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(orderId);
         OrderDetail orderDetailQuery=new OrderDetail();
