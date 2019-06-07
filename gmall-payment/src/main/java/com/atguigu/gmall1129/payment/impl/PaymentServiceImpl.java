@@ -26,8 +26,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     PaymentInfoMapper paymentInfoMapper;
 
-//    @Autowired
-//    ActiveMQUtil activeMQUtil;
+    @Autowired
+    ActiveMQUtil activeMQUtil;
 
 //    @Autowired
 //    AlipayClient alipayClient;
@@ -46,27 +46,27 @@ public class PaymentServiceImpl implements PaymentService {
         paymentInfoMapper.updateByPrimaryKey(paymentInfo);
     }
 
-////    public void sendPaymentResult(String orderId){
-////        Connection conn = activeMQUtil.getConn();
-////        try {
-////            Session session = conn.createSession(true, Session.SESSION_TRANSACTED);
-////            Queue paymentResultQueue = session.createQueue("PAYMENT_RESULT_QUEUE");
-////            MessageProducer producer = session.createProducer(paymentResultQueue);
-////             MapMessage mapMessage=new ActiveMQMapMessage();
-////            mapMessage.setString("orderId",orderId);
-////            mapMessage.setString("result","success");
-////            producer.send(mapMessage);
-////            session.commit();
-////
-////            session.close();
-////            conn.close();
-////
-////        } catch (JMSException e) {
-////            e.printStackTrace();
-////        }
-////    }
-////
-////
+    public void sendPaymentResult(String orderId){
+        Connection conn = activeMQUtil.getConn();
+        try {
+            Session session = conn.createSession(true, Session.SESSION_TRANSACTED);
+            Queue paymentResultQueue = session.createQueue("PAYMENT_RESULT_QUEUE");
+            MessageProducer producer = session.createProducer(paymentResultQueue);
+             MapMessage mapMessage=new ActiveMQMapMessage();
+            mapMessage.setString("orderId",orderId);
+            mapMessage.setString("result","success");
+            producer.send(mapMessage);
+            session.commit();
+
+            session.close();
+            conn.close();
+
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 ////    public void sendDelayCheck(String outTradeNo,Long checkCount){
 ////        Connection conn = activeMQUtil.getConn();
 ////        try {

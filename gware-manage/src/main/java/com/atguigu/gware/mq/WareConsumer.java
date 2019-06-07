@@ -26,9 +26,8 @@ import java.util.*;
  * @param
  * @return
  */
-
+@Component
 public class WareConsumer {
-
 
     @Autowired
     WareOrderTaskMapper wareOrderTaskMapper;
@@ -45,25 +44,22 @@ public class WareConsumer {
     @Autowired
     JmsTemplate jmsTemplate;
 
-
     @Autowired
     GwareService gwareService;
-
-
-
-
-
 
     @JmsListener(destination = "ORDER_RESULT_QUEUE",containerFactory = "jmsQueueListener")
     public void receiveOrder(TextMessage textMessage) throws JMSException {
         String orderTaskJson = textMessage.getText();
+
+        //库存工作单
         WareOrderTask wareOrderTask = JSON.parseObject(orderTaskJson, WareOrderTask.class);
         wareOrderTask.setTaskStatus(TaskStatus.PAID);
         gwareService.saveWareOrderTask(wareOrderTask);
         textMessage.acknowledge();
 
-
+	    //拆单
         List<WareOrderTask> wareSubOrderTaskList = gwareService.checkOrderSplit(wareOrderTask);
+        //锁库存
         if (wareSubOrderTaskList != null && wareSubOrderTaskList.size() >= 2) {
             for (WareOrderTask orderTask : wareSubOrderTaskList) {
                 gwareService.lockStock(orderTask);
@@ -71,7 +67,6 @@ public class WareConsumer {
         } else {
             gwareService.lockStock(wareOrderTask);
         }
-
 
     }
 

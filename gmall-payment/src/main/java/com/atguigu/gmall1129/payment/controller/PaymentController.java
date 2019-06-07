@@ -184,13 +184,17 @@ public class PaymentController {
         }
         return "fail";
     }
-/*
+
+	/** http://payment.gmall.com/sendPaymentResult
+	 * post orderId=7
+	 * @param orderId
+	 * @return
+	 */
     @PostMapping("sendPaymentResult")
     @ResponseBody
     public String  sendPaymentResult(String orderId){
             paymentService.sendPaymentResult(orderId);
             return "send success";
     }
-*/
 
 }

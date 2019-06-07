@@ -25,7 +25,7 @@ public interface OrderService {
 
     public void updateStatus(String orderId, ProcessStatus processStatus);
 
-//    public void sendOrderResult(String orderId);
+    public void sendOrderResult(String orderId);
 
     public List<OrderInfo> checkExpireOrder();
 

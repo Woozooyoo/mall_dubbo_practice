@@ -44,8 +44,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     RedisUtil redisUtil;
 
-//    @Autowired
-//    ActiveMQUtil activeMQUtil;
+    @Autowired
+    ActiveMQUtil activeMQUtil;
 
 //    @Reference
 //    PaymentService paymentService;
@@ -142,31 +142,31 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-//    public void sendOrderResult(String orderId){
-//        OrderInfo orderInfo = getOrderInfo(orderId);
-//        //装配数据
-//        Map orderMap = initWareMap(orderInfo);
-//        //转json
-//        String wareOrderJson = JSON.toJSONString(orderMap);
-//
-//        //发送消息
-//        Connection conn = activeMQUtil.getConn();
-//        try {
-//            Session session = conn.createSession(true, Session.SESSION_TRANSACTED);
-//            Queue orderResultQueue = session.createQueue("ORDER_RESULT_QUEUE");
-//            MessageProducer producer = session.createProducer(orderResultQueue);
-//            TextMessage textMessage=new ActiveMQTextMessage();
-//            textMessage.setText(wareOrderJson);
-//
-//            producer.send(textMessage);
-//            session.commit();
-//            session.close();
-//            conn.close();
-//        } catch (JMSException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+    public void sendOrderResult(String orderId){
+        OrderInfo orderInfo = getOrderInfo(orderId);
+        //装配数据
+        Map orderMap = initWareMap(orderInfo);
+        //转json
+        String wareOrderJson = JSON.toJSONString(orderMap);
+
+        //发送消息
+        Connection conn = activeMQUtil.getConn();
+        try {
+            Session session = conn.createSession(true, Session.SESSION_TRANSACTED);
+            Queue orderResultQueue = session.createQueue("ORDER_RESULT_QUEUE");
+            MessageProducer producer = session.createProducer(orderResultQueue);
+            TextMessage textMessage=new ActiveMQTextMessage();
+            textMessage.setText(wareOrderJson);
+
+            producer.send(textMessage);
+            session.commit();
+            session.close();
+            conn.close();
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public Map initWareMap(OrderInfo orderInfo){
         Map orderMap=new HashMap();
