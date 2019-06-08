@@ -47,6 +47,10 @@ public class WareConsumer {
     @Autowired
     GwareService gwareService;
 
+	/** 减库存的消费者
+	 * @param textMessage
+	 * @throws JMSException
+	 */
     @JmsListener(destination = "ORDER_RESULT_QUEUE",containerFactory = "jmsQueueListener")
     public void receiveOrder(TextMessage textMessage) throws JMSException {
         String orderTaskJson = textMessage.getText();

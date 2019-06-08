@@ -16,8 +16,8 @@ public interface PaymentService {
 
     public void sendPaymentResult(String orderId);
 
-//    public void sendDelayCheck(String outTradeNo, Long checkCount);
-//
-//    public boolean checkAlipayQuery(String outTradeNo);
+    public void sendDelayCheck(String outTradeNo, Long checkCount);
+
+    public boolean checkAlipayQuery(String outTradeNo);
 
 }

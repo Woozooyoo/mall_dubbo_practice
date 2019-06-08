@@ -101,7 +101,9 @@ public class PaymentController {
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
-//        paymentService.sendDelayCheck(orderInfo.getOutTradeNo(),3L);
+
+        //延迟队列
+        paymentService.sendDelayCheck(orderInfo.getOutTradeNo(),3L);
 
 	    // 封装一个form 表单  并且执行 <script>document.forms[0].submit();</script>
 	    // 相当于post 方式的 redirect     ，

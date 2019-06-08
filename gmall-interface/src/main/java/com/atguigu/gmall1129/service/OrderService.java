@@ -29,7 +29,7 @@ public interface OrderService {
 
     public List<OrderInfo> checkExpireOrder();
 
-//    public void handleExpireOrder(OrderInfo orderInfo);
+    public void handleExpireOrder(OrderInfo orderInfo);
 
     public List<OrderInfo> getOrderListByUser(String userId);
 

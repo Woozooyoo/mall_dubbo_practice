@@ -47,8 +47,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     ActiveMQUtil activeMQUtil;
 
-//    @Reference
-//    PaymentService paymentService;
+    //dubbo远程的
+    @Reference
+    PaymentService paymentService;
 
     public  String saveOrder(OrderInfo orderInfo){
         orderInfo.sumTotalAmount();
@@ -196,40 +197,47 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+	/** 查询超时订单
+	 * @return
+	 */
     public List<OrderInfo> checkExpireOrder(){
 
         Example example =new Example(OrderInfo.class);
-        example.createCriteria().andEqualTo("processStatus",ProcessStatus.UNPAID.name()).andLessThan("expireTime",new Date());
+        example.createCriteria().andEqualTo(
+								            "processStatus",
+									        ProcessStatus.UNPAID.name())
+		        .andLessThan("expireTime",new Date());
 
         List<OrderInfo> orderInfoList = orderInfoMapper.selectByExample(example);
         return  orderInfoList;
     }
 
+	/** 处理超时订单
+	 * @param orderInfo
+	 */
+    public void handleExpireOrder(OrderInfo orderInfo){
+/*        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+        System.out.println("处理订单："+orderInfo.getId());
+        PaymentInfo paymentInfoQuery = new PaymentInfo();
+        paymentInfoQuery.setOrderId(orderInfo.getId());
+        PaymentInfo paymentInfo = paymentService.getPaymentInfo(paymentInfoQuery);
+        if(paymentInfo==null){
+            return;
+        }
+        if(paymentInfo.getPaymentStatus()== PaymentStatus.PAID){
+            System.out.println("订单已支付："+orderInfo.getId());
+            updateStatus(orderInfo.getId(),ProcessStatus.PAID);
+            //发送库存
+        }else{
+            System.out.println("订单未支付,关闭订单："+orderInfo.getId());
+            updateStatus(orderInfo.getId(),ProcessStatus.CLOSED);
+        }
 
-//    public void handleExpireOrder(OrderInfo orderInfo){
-//        ///
-///*        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }*/
-//        System.out.println("处理订单："+orderInfo.getId());
-//        PaymentInfo paymentInfoQuery = new PaymentInfo();
-//        paymentInfoQuery.setOrderId(orderInfo.getId());
-//        PaymentInfo paymentInfo = paymentService.getPaymentInfo(paymentInfoQuery);
-//        if(paymentInfo==null){
-//            return ;
-//        }
-//        if(paymentInfo.getPaymentStatus()== PaymentStatus.PAID){
-//            System.out.println("订单已支付："+orderInfo.getId());
-//            updateStatus(orderInfo.getId(),ProcessStatus.PAID);
-//            //发送库存
-//        }else{
-//            System.out.println("订单未支付,关闭订单："+orderInfo.getId());
-//            updateStatus(orderInfo.getId(),ProcessStatus.CLOSED);
-//        }
-//
-//    }
+    }
 
 
 
