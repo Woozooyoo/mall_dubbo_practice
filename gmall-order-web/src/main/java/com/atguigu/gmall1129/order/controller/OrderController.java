@@ -157,7 +157,10 @@ public class OrderController {
 		return "list";
 	}
 
-
+	/** 拆单接口的调用
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("orderSplit")
 	@ResponseBody
 	public String orderSplit(HttpServletRequest request){
@@ -170,7 +173,6 @@ public class OrderController {
 		String subOrderJson = JSON.toJSONString(subOrderList);
 
 		return subOrderJson;
-
 	}
 
 }

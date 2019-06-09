@@ -274,7 +274,11 @@ public class OrderServiceImpl implements OrderService {
         return orderInfoList;
     }
 
-
+	/** 拆单接口的转换 成子订单
+	 * @param orderId
+	 * @param wareSkuMapList
+	 * @return
+	 */
     public List<Map> orderSplit(String orderId, List<Map> wareSkuMapList){
         //1  根据orderId 查询orderInfo
         OrderInfo orderInfo = getOrderInfo(orderId);
@@ -288,12 +292,10 @@ public class OrderServiceImpl implements OrderService {
             OrderInfo subOrderInfo = new OrderInfo();
             try {
                 BeanUtils.copyProperties(subOrderInfo,orderInfo);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
-            subOrderInfo.setId(null);
+	        subOrderInfo.setId(null);
             subOrderInfo.setParentOrderId(orderInfo.getId());
             //子订单 明细表
             //3 根据 wareSkuMapList 中的skuIds  生成子订单的明细表
@@ -317,7 +319,7 @@ public class OrderServiceImpl implements OrderService {
             //4 保存子订单 主表 + 子表  利用save方法
             saveOrder(subOrderInfo);
 
-            //6 把子订单列表 编程List<Map>结构  返回
+            //6 把子订单列表 变成List<Map>结构  返回
             Map subOrderMap = initWareMap(subOrderInfo);
             subOrderMapList.add(subOrderMap);
         }

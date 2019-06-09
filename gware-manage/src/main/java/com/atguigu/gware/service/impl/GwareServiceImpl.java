@@ -184,6 +184,11 @@ public class GwareServiceImpl implements GwareService {
 
 	}
 
+	/** 拆单逻辑，检查商品涉及到几个仓库
+	 *
+	 * @param wareOrderTask
+	 * @return
+	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public List<WareOrderTask> checkOrderSplit(WareOrderTask wareOrderTask) {
 		List<WareOrderTaskDetail> details = wareOrderTask.getDetails ();
@@ -203,6 +208,8 @@ public class GwareServiceImpl implements GwareService {
 			Map<String, String> map = new HashMap<> ();
 			map.put ("orderId", wareOrderTask.getOrderId ());
 			map.put ("wareSkuMap", jsonString);
+
+			//发送订单的 拆单接口
 			String resultJson = HttpclientUtil.doPost (ORDER_URL, map);
 			List<WareOrderTask> wareOrderTaskList = JSON.parseArray (resultJson, WareOrderTask.class);
 			if (wareOrderTaskList.size () >= 2) {
